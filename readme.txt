@@ -5,8 +5,8 @@ description: Send and receive messages using Nexmo
 version: 0.1
 requires: 2.x
 tested up to: 2.1
-author: Emmanuel Kala
-author website: http://twitter.com/bytebandit
+author: Nexmo
+author website: http://www.nexmo.com
 
 == Description ==
 Send and receive SMS using the Nexmo platform
