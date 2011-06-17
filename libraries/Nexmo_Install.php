@@ -34,32 +34,32 @@ class Nexmo_Install {
 	 */
 	public function run_install()
 	{
-        if (FALSE !== $setup_sql_file = Kohana::find_file('sql', 'install_nexmo', FALSE, 'sql'))
-        {
-            // Fetch the contents of the file
-            $sql = file_get_contents($setup_sql_file);
+		if (FALSE !== $setup_sql_file = Kohana::find_file('sql', 'install_nexmo', FALSE, 'sql'))
+		{
+			// Fetch the contents of the file
+			$sql = file_get_contents($setup_sql_file);
 
-            // If a table prefix is specified add it to the SQL
+			// If a table prefix is specified add it to the SQL
             if ($this->table_prefix)
             {
-                $find = array(
-                    'CREATE TABLE IF NOT EXISTS `',
-                    'INSERT INTO `',
-                    'ALTER TABLE `',
-                    'UPDATE `'
-                );
-
-                $replace = array(
-                    'CREATE TABLE IF NOT EXISTS `'.$this->table_prefix.'_',
-                    'INSERT INTO `'.$this->table_prefix.'_',
-                    'ALTER TABLE `'.$this->table_prefix.'_',
-                    'UPDATE `'.$this->table_prefix.'_'
-                );
-
-                // Rebuild the SQL
-                $sql = str_replace($find, $replace, $sql);
-            }
-
+				$find = array(
+					'CREATE TABLE IF NOT EXISTS `',
+					'INSERT INTO `',
+					'ALTER TABLE `',
+					'UPDATE `'
+				);
+				
+				$replace = array(
+					'CREATE TABLE IF NOT EXISTS `'.$this->table_prefix.'_',
+					'INSERT INTO `'.$this->table_prefix.'_',
+					'ALTER TABLE `'.$this->table_prefix.'_',
+					'UPDATE `'.$this->table_prefix.'_'
+				);
+				
+				// Rebuild the SQL
+				$sql = str_replace($find, $replace, $sql);
+			}
+			
 			// Split by ; to get the SQL statement for individual tables
 			$queries = explode(';', $sql);
 
@@ -72,11 +72,40 @@ class Nexmo_Install {
 	}
 	
 	/**
-	 * Uinstalls the nexmo plugin by dropping its schema objects
+	 * Uinstalls the nexmo plugin by dropping all its schema objects
 	 */
 	public function uninstall()
 	{
-		// Execute the uinstall_nexmo.sql script
+		if (FALSE !== $uninstall_sql_file = Kohana::find_file('sql', 'uninstall_nexmo', FALSE, 'sql'))
+		{
+			// Fetch the contents of the file
+			$sql = file_get_contents($uninstall_sql_file);
+
+			// If a table prefix is specified add it to the SQL
+            if ($this->table_prefix)
+            {
+				$find = array(
+					'DROP TABLE IF EXISTS `'
+				);
+				
+				$replace = array(
+					'DROP TABLE IF EXISTS `'.$this->table_prefix.'_'
+				);
+				
+				// Rebuild the SQL
+				$sql = str_replace($find, $replace, $sql);
+			}
+			
+			// Split by ; to get the SQL statement for individual tables
+			$queries = explode(';', $sql);
+
+			// Execute the individual CREATE statements
+			foreach ($queries as $query)
+			{
+				Kohana::log('info', $query);
+				$this->db->query($query);
+			}
+		}
 	}
 }
 ?>
