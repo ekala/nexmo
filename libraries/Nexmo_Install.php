@@ -40,8 +40,8 @@ class Nexmo_Install {
 			$sql = file_get_contents($setup_sql_file);
 
 			// If a table prefix is specified add it to the SQL
-			if ($this->table_prefix)
-			{
+            if ($this->table_prefix)
+            {
 				$find = array(
 					'CREATE TABLE IF NOT EXISTS `',
 					'INSERT INTO `',
@@ -82,13 +82,15 @@ class Nexmo_Install {
 			$sql = file_get_contents($uninstall_sql_file);
 
 			// If a table prefix is specified add it to the SQL
-			if ($this->table_prefix)
-			{
-				// String to search for
-				$find =  'DROP TABLE IF EXISTS `';
+            if ($this->table_prefix)
+            {
+				$find = array(
+					'DROP TABLE IF EXISTS `'
+				);
 				
-				// String to replace with
-				$replace =  'DROP TABLE IF EXISTS `'.$this->table_prefix.'_';
+				$replace = array(
+					'DROP TABLE IF EXISTS `'.$this->table_prefix.'_'
+				);
 				
 				// Rebuild the SQL
 				$sql = str_replace($find, $replace, $sql);
@@ -100,6 +102,7 @@ class Nexmo_Install {
 			// Execute the individual CREATE statements
 			foreach ($queries as $query)
 			{
+				Kohana::log('info', $query);
 				$this->db->query($query);
 			}
 		}

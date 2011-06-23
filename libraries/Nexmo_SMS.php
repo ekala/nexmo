@@ -301,7 +301,8 @@ class Nexmo_SMS_Core {
 		$curl_options = array(
 			CURLOPT_URL => $request_url,
 			CURLOPT_RETURNTRANSFER => TRUE,
-			CURLOPT_HEADER => FALSE
+			CURLOPT_HEADER => FALSE,
+			CURLOPT_HTTPHEADER => array("Accept: application/json"),
 		);
 		
 		// Initiate cURL
@@ -325,7 +326,7 @@ class Nexmo_SMS_Core {
 			// Success
 			
 			// Convert the response to JSON
-			$response = json_encode($response);
+			$response = json_decode($response);
 			
 			// Return
 			return json_encode(array(

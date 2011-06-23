@@ -20,7 +20,7 @@
 				if (response.success)
 				{
 					// Show the balance
-					alert('<?php echo Kohana::lang('nexmo.acccount_balance')?>: ' + response.message);
+					alert('<?php echo Kohana::lang('nexmo.account_balance')?>: ' + response.message);
 				}
 				else
 				{
